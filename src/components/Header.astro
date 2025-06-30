@@ -4,12 +4,22 @@ import { SITE_TITLE } from '../consts';
 ---
 
 <header>
-	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
+	<nav class="container d-flex align-items-center justify-content-between">
+		<div class="logo d-flex align-items-center gap-2 me-auto justify-content-center">
+			<img
+				src="/images/logo.avif"
+				alt="Site Logo"
+				width="64"
+				height="64"
+			/>
+			<h2><a href="/">{SITE_TITLE}</a></h2>
+		</div>
 		<div class="internal-links">
 			<HeaderLink href="/">Home</HeaderLink>
 			<HeaderLink href="/blog">Blog</HeaderLink>
 			<HeaderLink href="/about">About</HeaderLink>
+			<HeaderLink href="/links">Links</HeaderLink>
+			<HeaderLink href="/portfolio">Portfolio</HeaderLink>
 		</div>
 		<div class="social-links">
 			<a href="https://m.webtoo.ls/@astro" target="_blank">
@@ -46,8 +56,6 @@ import { SITE_TITLE } from '../consts';
 	header {
 		margin: 0;
 		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
 	}
 	h2 {
 		margin: 0;
@@ -65,7 +73,6 @@ import { SITE_TITLE } from '../consts';
 	}
 	nav a {
 		padding: 1em 0.5em;
-		color: var(--black);
 		border-bottom: 4px solid transparent;
 		text-decoration: none;
 	}
