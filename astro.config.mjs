@@ -1,6 +1,5 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import remarkWikiLink from 'remark-wiki-link';
 import remarkObsidian from 'remark-obsidian';
