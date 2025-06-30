@@ -9,7 +9,7 @@ import slugify from 'slugify';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://alexhurd.com',
-	integrations: [mdx(), sitemap()],
+	integrations: [sitemap()],
 	markdown: {
 		remarkPlugins: [
 			[remarkWikiLink, { 
