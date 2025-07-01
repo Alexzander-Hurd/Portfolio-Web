@@ -3,6 +3,10 @@ import type { Node } from 'unist';
 import type { Root, Text, Paragraph, Link, Html } from 'mdast';
 import { visit } from 'unist-util-visit';
 
+import fs from 'fs';
+import path from 'path';
+const imageDir = process.env.IMAGE_DIR ?? path.join(process.cwd(), 'public/');;
+
 interface Options {
     basePath?: string;
     exts?: string[];
@@ -65,8 +69,12 @@ const embedLinks: Plugin<[Options?]> = (options = {} ) => {
                 }
 
                 const sources = exts
+                .filter((ext) => {
+                    console.log(path.join(imageDir, `${src}.${ext}`));
+                    return fs.existsSync(path.join(imageDir, `${src}.${ext}`));
+                })
                 .map((ext) => {
-                    `<source srcset="${src}.${ext}" type="image/${ext === 'jpg' ? 'jpeg' : ext}">`;
+                    return `<source srcset="${src}.${ext}" type="image/${ext === 'jpg' ? 'jpeg' : ext}">`;
                 })
                 .join('\n');
 

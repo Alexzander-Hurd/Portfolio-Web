@@ -10,7 +10,7 @@ export default defineConfig({
   integrations: [sitemap()],
   markdown: {
     remarkPlugins: [
-      [embedLinks as RemarkPlugin, { basePath: '/images', exts: ['jpg', 'jpeg', 'avif', 'webp'] }],
+      [embedLinks as RemarkPlugin, { basePath: '/images', exts: ['avif', 'webp', 'jpg'] }],
       [wikiLinks as RemarkPlugin, { basePath: '/blog/' }],
     ],
   },
