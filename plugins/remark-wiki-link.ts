@@ -14,7 +14,7 @@ const wikiLinks: Plugin<[Options?]> = (options = {}) => {
     basePath += '/';
   }
 
-  const wikiLinkRegex = /\[\[([\w\-_\/]+)\]\]/g;
+  const wikiLinkRegex = /\[\[([\w\-_/]+)(?:\|([^\]]+))?\]\]/g;
 
   return (tree: Node) => {
     // We expect `tree` to be Root for sure, but type as Node to satisfy Transformer<Node, Node>
@@ -44,6 +44,7 @@ const wikiLinks: Plugin<[Options?]> = (options = {}) => {
 
       while ((match = wikiLinkRegex.exec(value)) !== null) {
         const slug = match[1];
+        const alias = match[2];
         const matchStart = match.index;
 
         if (matchStart > lastIndex) {
@@ -56,7 +57,7 @@ const wikiLinks: Plugin<[Options?]> = (options = {}) => {
         newNodes.push({
           type: 'link',
           url: `${basePath}${slug}`,
-          children: [{ type: 'text', value: slug }],
+          children: [{ type: 'text', value: alias ?? slug }],
         });
 
         lastIndex = match.index + match[0].length;

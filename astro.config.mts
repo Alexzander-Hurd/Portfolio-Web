@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import wikiLinks from './plugins/remark-wiki-link.js';
+import embedLinks from './plugins/remark-embed-link.js';
 import type { RemarkPlugin } from '@astrojs/markdown-remark';
 
 export default defineConfig({
@@ -9,7 +10,8 @@ export default defineConfig({
   integrations: [sitemap()],
   markdown: {
     remarkPlugins: [
-      [wikiLinks as RemarkPlugin, { basePath: '/blog' }],
+      [embedLinks as RemarkPlugin, { basePath: '/images', exts: ['jpg', 'jpeg', 'avif', 'webp'] }],
+      [wikiLinks as RemarkPlugin, { basePath: '/blog/' }],
     ],
   },
 });
