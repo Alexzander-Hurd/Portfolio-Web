@@ -21,7 +21,7 @@ const embedLinks: Plugin<[Options?]> = (options = {} ) => {
         basePath += '/';
     }
 
-    const embedRegex = /!\[\[([\w\-_\/\.]+)(?:\|([^\]]+))?\]\]/g;
+    const embedRegex = /!\[\[([\w\s\-_\/\.]+)(?:\|([^\]]+))?\]\]/g;
 
     return (tree: Node) => {
         // We expect `tree` to be Root for sure, but type as Node to satisfy Transformer<Node, Node>
@@ -56,7 +56,7 @@ const embedLinks: Plugin<[Options?]> = (options = {} ) => {
             while ((match = embedRegex.exec(value)) !== null){
                 const start = match.index;
                 const file = match[1];
-                const slug = file.split('.').slice(0, -1).join('.');
+                const slug = file.split('.').slice(0, -1).join('.').toLowerCase().replace(/ /g, '-');
                 const extension = file.split('.').pop();
                 const alt = match[2] || slug;
                 const src = basePath + slug;
