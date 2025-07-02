@@ -1,53 +1,81 @@
 ---
 import Layout from "../layouts/BaseLayout.astro";
 import HeroImage from "../assets/hero-image.jpg";
+import { getCollection } from "astro:content";
+import BlogCard from "../components/BlogCard.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import { Image } from "astro:assets";
+
+const blogPosts = (await getCollection("blog"))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3);
+const projects = (await getCollection("portfolio"))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 2);
 ---
 
 <Layout
-	title="Welcome to Astro."
-	description="Learn how to build a personal website with Astro"
-	heroImage={HeroImage}>
-	<p>
-		Welcome to the official <a href="https://astro.build/">Astro</a> blog starter
-		template. This template serves as a lightweight, minimally-styled starting
-		point for anyone looking to build a personal website, blog, or portfolio
-		with Astro.
-	</p>
-	<p>
-		This template comes with a few integrations already configured in your
-		<code>astro.config.mjs</code> file. You can customize your setup with
-		<a href="https://astro.build/integrations">Astro Integrations</a> to add
-		tools like Tailwind, React, or Vue to your project.
-	</p>
-	<p>Here are a few ideas on how to get started with the template:</p>
-	<ul>
-		<li>Edit this page in <code>src/pages/index.astro</code></li>
-		<li>
-			Edit the site header items in <code
-				>src/components/Header.astro</code>
-		</li>
-		<li>
-			Add your name to the footer in <code
-				>src/components/Footer.astro</code>
-		</li>
-		<li>
-			Check out the included blog posts in <code>src/content/blog/</code>
-		</li>
-		<li>
-			Customize the blog post page layout in <code
-				>src/layouts/BlogPost.astro</code>
-		</li>
-	</ul>
-	<p>
-		Have fun! If you get stuck, remember to
-		<a href="https://docs.astro.build/">read the docs</a>
-		or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-	</p>
-	<p>
-		Looking for a blog template with a bit more personality? Check out
-		<a href="https://github.com/Charca/astro-blog-template"
-			>astro-blog-template</a
-		>
-		by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-	</p>
+	title="Welcome to Alex Hurd UK"
+	description="Developer & amateur photographer exploring technology and creativity."
+	image={HeroImage}
+>
+	<!-- Hero -->
+	<section class="text-center">
+		<Image
+			width={720}
+			height={420}
+			src={HeroImage}
+			alt="Hero Image"
+			class="mx-auto"
+		/>
+		<h2 class="text-4xl md:text-6xl font-bold">Hi, I'm Alex 👋</h2>
+		<p class="text-xl mt-4 text-gray-500">
+			Developer & amateur photographer exploring technology and
+			creativity.
+		</p>
+		<div class="mt-6 flex justify-center gap-4">
+			<a href="/portfolio" class="btn btn-primary">View Portfolio</a>
+			<a href="/blog" class="btn btn-secondary">Read the Blog</a>
+		</div>
+	</section>
+
+	<!-- Projects -->
+	<section>
+		<h3 class="text-2xl font-semibold mb-6">Featured Projects</h3>
+		<div class="grid gap-6 md:grid-cols-2">
+			{
+				projects.length > 0 ? (
+					projects.map((post) => (
+						<ProjectCard project={post} />
+					))
+				) : (
+					<p>No blog posts found.</p>
+				)
+			}
+		</div>
+		<div class="mt-4 text-right">
+			<a href="/portfolio" class="text-blue-500 hover:underline"
+				>See all projects →</a
+			>
+		</div>
+	</section>
+
+	<!-- Blog Posts -->
+	<section>
+		<h3 class="text-2xl font-semibold mb-6">Latest Blog Posts</h3>
+		<div class="grid gap-4">
+			{
+				blogPosts.length > 0 ? (
+					blogPosts.map((post) => <BlogCard entry={post} />)
+				) : (
+					<p>No blog posts found.</p>
+				)
+			}
+		</div>
+		<div class="mt-4 text-right">
+			<a href="/blog" class="text-blue-500 hover:underline"
+				>See all posts →</a
+			>
+		</div>
+	</section>
 </Layout>
