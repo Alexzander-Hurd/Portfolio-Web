@@ -12,6 +12,9 @@ const blogPosts = (await getCollection("blog"))
 const projects = (await getCollection("portfolio"))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 	.slice(0, 2);
+
+	
+
 ---
 
 <Layout
@@ -41,13 +44,39 @@ const projects = (await getCollection("portfolio"))
 
 	<!-- Projects -->
 	<section>
-		<h3 class="text-2xl font-semibold mb-6">Featured Projects</h3>
+		<h3 class="mt-4">Featured Projects</h3>
 		<div class="grid gap-6 md:grid-cols-2">
 			{
 				projects.length > 0 ? (
-					projects.map((post) => (
-						<ProjectCard project={post} />
-					))
+					<div
+						id="projectCarousel"
+						class="carousel slide"
+						data-bs-ride="carousel"
+						data-bs-interval="5000"
+					>
+						<div class="carousel-inner p-5">
+							{projects.map((project, i) => (
+								<div
+									class={`carousel-item ${i === 0 ? "active" : ""}`}
+								>
+									<ProjectCard project={project} />
+								</div>
+							))}
+						</div>
+
+						<div class="carousel-indicators">
+							{projects.map((_, i) => (
+								<button
+									style="filter: invert(1);"
+									type="button"
+									data-bs-target="#projectCarousel"
+									data-bs-slide-to={i}
+									class={i === 0 ? "active" : ""}
+									aria-label={`Slide ${i + 1}`}
+								/>
+							))}
+						</div>
+					</div>
 				) : (
 					<p>No blog posts found.</p>
 				)
@@ -58,20 +87,46 @@ const projects = (await getCollection("portfolio"))
 				>See all projects →</a
 			>
 		</div>
+
 	</section>
 
 	<!-- Blog Posts -->
 	<section>
-		<h3 class="text-2xl font-semibold mb-6">Latest Blog Posts</h3>
-		<div class="grid gap-4">
-			{
-				blogPosts.length > 0 ? (
-					blogPosts.map((post) => <BlogCard entry={post} />)
-				) : (
-					<p>No blog posts found.</p>
-				)
-			}
-		</div>
+		<h3 class="mt-4">Latest Blog Posts</h3>
+		{
+			blogPosts.length > 0 ? (
+				<div
+					id="blogCarousel"
+					class="carousel slide"
+					data-bs-ride="carousel"
+				>
+					<div class="carousel-inner p-5">
+						{blogPosts.map((post, i) => (
+							<div
+								class={`carousel-item ${i === 0 ? "active" : ""}`}
+							>
+								<BlogCard entry={post} />
+							</div>
+						))}
+					</div>
+
+					<div class="carousel-indicators">
+						{blogPosts.map((_, i) => (
+							<button
+								style="filter: invert(1);"
+								type="button"
+								data-bs-target="#blogCarousel"
+								data-bs-slide-to={i}
+								class={i === 0 ? "active" : ""}
+								aria-label={`Slide ${i + 1}`}
+							/>
+						))}
+					</div>
+				</div>
+			) : (
+				<p>No blog posts found.</p>
+			)
+		}
 		<div class="mt-4 text-right">
 			<a href="/blog" class="text-blue-500 hover:underline"
 				>See all posts →</a

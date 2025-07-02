@@ -8,43 +8,48 @@ import Placeholder from "../assets/hero-image.jpg";
 const alt = `Thumbnail image for  project ${title}`;
 ---
 
-<div class="card">
-    <a href={`/portfolio/${project.id}/`}>
-        <div class="row align-items-center justify-content-around">
-            <div class="col-4 ms-3">
-                {
-                    heroImage ? (
-                        <Image
-                            width={720}
-                            height={360}
-                            src={heroImage}
-                            alt={alt}
-                        />
-                    ) : (
-                        <Image
-                            width={720}
-                            height={360}
-                            src={Placeholder}
-                            alt={alt}
-                        />
-                    )
-                }
-            </div>
-            <div class="col">
-                <h2 class="title">{title}</h2>
-                <p class="date">
-                    <FormattedDate date={pubDate} />
+<div class="w-100 h-100 col align-items-center justify-content-center d-flex">
+    <div class="card w-100 rounded-4">
+        <a href={`/portfolio/${project.id}/`} class="text-decoration-none text-white">
+            <div class="card-body row g-0 align-items-center">
+                <div class="col-md-5 pe-2">
                     {
-                        updatedDate && (
-                            <div class="last-updated-on">
-                                Last updated on{" "}
-                                <FormattedDate date={updatedDate} />
-                            </div>
+                        heroImage ? (
+                            <Image
+                                width={720}
+                                height={360}
+                                src={heroImage}
+                                alt={alt}
+                            />
+                        ) : (
+                            <Image
+                                width={720}
+                                height={360}
+                                src={Placeholder}
+                                alt={alt}
+                            />
                         )
                     }
-                </p>
-                <p class="description">{description}</p>
+                </div>
+                <div class="col-md-7 ps-2">
+                    <h5 class="card-title">{title}</h5>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            <FormattedDate date={pubDate} />
+                            {
+                                updatedDate && (
+                                    <>
+                                        <br />
+                                        Last updated on{" "}
+                                        <FormattedDate date={updatedDate} />
+                                    </>
+                                )
+                            }
+                        </small>
+                    </p>
+                    <p class="card-text">{description}</p>
+                </div>
             </div>
-        </div>
-    </a>
+        </a>
+    </div>
 </div>
