@@ -9,47 +9,39 @@ const alt = `Thumbnail image for  project ${title}`;
 ---
 
 <div class="w-100 h-100 col align-items-center justify-content-center d-flex">
-    <div class="card w-100 rounded-4">
-        <a href={`/portfolio/${project.id}/`} class="text-decoration-none text-white">
-            <div class="card-body row g-0 align-items-center">
-                <div class="col-md-5 pe-2">
-                    {
-                        heroImage ? (
-                            <Image
-                                width={720}
-                                height={360}
-                                src={heroImage}
-                                alt={alt}
-                            />
-                        ) : (
-                            <Image
-                                width={720}
-                                height={360}
-                                src={Placeholder}
-                                alt={alt}
-                            />
-                        )
-                    }
-                </div>
-                <div class="col-md-7 ps-2">
-                    <h5 class="card-title">{title}</h5>
-                    <p class="card-text">
-                        <small class="text-muted">
-                            <FormattedDate date={pubDate} />
-                            {
-                                updatedDate && (
-                                    <>
-                                        <br />
-                                        Last updated on{" "}
-                                        <FormattedDate date={updatedDate} />
-                                    </>
-                                )
-                            }
-                        </small>
-                    </p>
-                    <p class="card-text">{description}</p>
-                </div>
-            </div>
-        </a>
-    </div>
+  <div class="card w-100 rounded-4 bg-grad">
+    <a
+      href={`/portfolio/${project.id}/`}
+      class="text-decoration-none text-white"
+    >
+      <div class="card-body row g-0 align-items-center">
+        <div class="col-md-5 pe-2">
+          {
+            heroImage ? (
+              <Image width={720} height={360} src={heroImage} alt={alt} />
+            ) : (
+              <Image width={720} height={360} src={Placeholder} alt={alt} />
+            )
+          }
+        </div>
+        <div class="col-md-7 ps-2">
+          <h5 class="card-title">{title}</h5>
+          <p class="card-text">
+            <small class="text-muted">
+              <FormattedDate date={pubDate} />
+              {
+                updatedDate && (
+                  <>
+                    <br />
+                    Last updated on <FormattedDate date={updatedDate} />
+                  </>
+                )
+              }
+            </small>
+          </p>
+          <p class="card-text">{description}</p>
+        </div>
+      </div>
+    </a>
+  </div>
 </div>
