@@ -6,7 +6,7 @@ import embedLinks from './plugins/remark-embed-link.js';
 import type { RemarkPlugin } from '@astrojs/markdown-remark';
 
 export default defineConfig({
-  site: 'https://alexhurd.com',
+  site: 'https://www.alexhurd.com',
   integrations: [sitemap()],
   markdown: {
     remarkPlugins: [
