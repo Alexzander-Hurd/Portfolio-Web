@@ -4,7 +4,9 @@ import { SITE_TITLE } from "../consts";
 ---
 
 <header>
-  <nav class="container d-flex align-items-center bg-grad">
+  <nav
+    class="navbar navbar-expand-lg d-flex align-items-center bg-grad p-3 rounded-4"
+  >
     <div class="d-flex align-items-center gap-2 me-auto">
       <img
         src="/images/logo.avif"
@@ -15,14 +17,29 @@ import { SITE_TITLE } from "../consts";
       />
       <h2 class="text-white"><a href="/">{SITE_TITLE}</a></h2>
     </div>
-    <div class="internal-links text-white">
-      <HeaderLink href="/">Home</HeaderLink>
-      <HeaderLink href="/blog">Blog</HeaderLink>
-      <HeaderLink href="/about">About</HeaderLink>
-      <HeaderLink href="/links">Links</HeaderLink>
-      <HeaderLink href="/portfolio">Portfolio</HeaderLink>
+    <button
+      class="navbar-toggler d-lg-none"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#mainNavbar"
+      aria-controls="mainNavbar"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><HeaderLink href="/">Home</HeaderLink></li>
+        <li class="nav-item"><HeaderLink href="/blog">Blog</HeaderLink></li>
+        <li class="nav-item"><HeaderLink href="/about">About</HeaderLink></li>
+        <li class="nav-item"><HeaderLink href="/links">Links</HeaderLink></li>
+        <li class="nav-item">
+          <HeaderLink href="/portfolio">Portfolio</HeaderLink>
+        </li>
+      </ul>
     </div>
-    <div class="social-links">
+    <div class="social-links d-none d-lg-flex">
       <a href="https://infosec.exchange/@Alexhurd" target="_blank">
         <span class="sr-only">Follow Astro on Mastodon</span>
         <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32"
