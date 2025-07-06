@@ -51,8 +51,7 @@ jobs:
 
       - name: Update submodule to latest content
         run: |
-          # Update submodule (using alias in .gitmodules)
-          git submodule init --recursive
+          git submodule init
           git submodule sync
           git submodule update --remote src/content
 
@@ -61,7 +60,6 @@ jobs:
 
       - name: Push changes to staging branch of web repo
         run: |
-          # Make sure remote URL uses alias for web repo so correct key is used
           git remote set-url origin git@web.github.com:user/web-repo.git
 
           git push origin HEAD:staging
