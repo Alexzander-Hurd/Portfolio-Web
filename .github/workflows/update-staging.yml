@@ -15,8 +15,7 @@ jobs:
       - name: Checkout web repo with content submodule
         uses: actions/checkout@v4
         with:
-          submodules: recursive
-          ssh-key: ${{ secrets.SSH_PULL_KEY }} # 1. Use content repo key here
+          submodules: false
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -53,6 +52,8 @@ jobs:
       - name: Update submodule to latest content
         run: |
           # Update submodule (using alias in .gitmodules)
+          git submodule init --recursive
+          git submodule sync
           git submodule update --remote src/content
 
           git add src/content
