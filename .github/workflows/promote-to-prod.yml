@@ -14,11 +14,37 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Setup SSH keys for content and web repos
+        run: |
+          mkdir -p ~/.ssh
+
+          # Save deploy keys from secrets
+          echo "${{ secrets.SSH_PUSH_KEY }}" > ~/.ssh/web_key
+          chmod 600 ~/.ssh/content_key ~/.ssh/web_key
+
+          # Create SSH config with host aliases
+          cat >> ~/.ssh/config << EOF
+
+          Host web.github.com
+            HostName github.com
+            IdentityFile ~/.ssh/web_key
+            IdentitiesOnly yes
+          EOF
+
+          # Start ssh-agent and add both keys
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/web_key
+
+          # Add github.com to known hosts to avoid prompt
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
       - name: Ensure master is up to date with staging
         run: |
 
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+
+          git remote set-url origin git@web.github.com:Alexzander-Hurd/Portfolio-Web.git
 
           git checkout master
           git merge origin/staging --ff-only || git merge origin/staging --no-ff -m "Promote staging to production"
