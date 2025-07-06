@@ -20,7 +20,7 @@ jobs:
 
           # Save deploy keys from secrets
           echo "${{ secrets.SSH_PUSH_KEY }}" > ~/.ssh/web_key
-          chmod 600 ~/.ssh/content_key ~/.ssh/web_key
+          chmod 600 ~/.ssh/web_key
 
           # Create SSH config with host aliases
           cat >> ~/.ssh/config << EOF
