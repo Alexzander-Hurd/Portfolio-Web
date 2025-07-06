@@ -9,10 +9,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout web repo
+      - name: Set up SSH for Submodule Access
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PULL_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Checkout web repo with submodules
         uses: actions/checkout@v4
         with:
           submodules: recursive
+          ssh-key: ${{ secrets.SSH_PULL_KEY }}
+          fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Configure Git
@@ -24,5 +33,5 @@ jobs:
         run: |
           git submodule update --remote path/to/content-submodule
           git add path/to/content-submodule
-          git commit -m "Update content submodule from upstream"
+          git commit -m "Update content submodule from upstream" || echo "No changes to commit"
           git push origin HEAD:staging
