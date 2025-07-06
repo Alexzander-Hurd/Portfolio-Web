@@ -1,37 +1,65 @@
 name: Update Content in Staging
 
 on:
-  repository_dispatch:  # Triggered by webhook from Content repo
+  repository_dispatch: # Triggered by webhook from Content repo
     types: [content-updated]
+
+concurrency:
+  group: update-staging
+  cancel-in-progress: true
 
 jobs:
   update-submodule-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Set up SSH for Submodule Access
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PULL_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-      - name: Checkout web repo with submodules
+      - name: Checkout web repo with content submodule
         uses: actions/checkout@v4
         with:
           submodules: recursive
-          ssh-key: ${{ secrets.SSH_PULL_KEY }}
-          fetch-depth: 0
+          ssh-key: ${{ secrets.SSH_PULL_KEY }} # 1. Use content repo key here
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Configure Git
+      - name: Setup SSH keys for content and web repos
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          mkdir -p ~/.ssh
 
-      - name: Update submodule
+          # Save deploy keys from secrets
+          echo "${{ secrets.SSH_PULL_KEY }}" > ~/.ssh/content_key
+          echo "${{ secrets.SSH_PUSH_KEY }}" > ~/.ssh/web_key
+          chmod 600 ~/.ssh/content_key ~/.ssh/web_key
+
+          # Create SSH config with host aliases
+          cat >> ~/.ssh/config << EOF
+          Host content.github.com
+            HostName github.com
+            IdentityFile ~/.ssh/content_key
+            IdentitiesOnly yes
+
+          Host web.github.com
+            HostName github.com
+            IdentityFile ~/.ssh/web_key
+            IdentitiesOnly yes
+          EOF
+
+          # Start ssh-agent and add both keys
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/content_key
+          ssh-add ~/.ssh/web_key
+
+          # Add github.com to known hosts to avoid prompt
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Update submodule to latest content
         run: |
+          # Update submodule (using alias in .gitmodules)
           git submodule update --remote src/content
+
           git add src/content
           git commit -m "Update content submodule from upstream" || echo "No changes to commit"
+
+      - name: Push changes to staging branch of web repo
+        run: |
+          # Make sure remote URL uses alias for web repo so correct key is used
+          git remote set-url origin git@web.github.com:user/web-repo.git
+
           git push origin HEAD:staging
