@@ -1,3 +1,3 @@
 [submodule "src/content"]
     path = src/content
-    url = git@content.github.com:Alexzander-Hurd/Portfolio-Blog.git
+    url = https://github.com/Alexzander-Hurd/Portfolio-Blog.git

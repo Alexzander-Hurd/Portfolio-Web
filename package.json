@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "./ssh-alias.sh && node copy-images.js && astro dev",
+    "dev": "node copy-images.js && astro dev",
     "build": "node copy-images.js && astro build",
     "preview": "astro preview",
     "astro": "astro"
