@@ -1,0 +1,54 @@
+# robots.txt for https://www.alexhurd.uk
+
+# --- Allow major SEO bots with conservative crawl rate ---
+
+User-agent: Googlebot
+Disallow:
+# Googlebot does not support Crawl-delay in robots.txt
+
+User-agent: Bingbot
+Disallow:
+Crawl-delay: 10
+
+User-agent: Slurp
+Disallow:
+Crawl-delay: 10
+
+User-agent: DuckDuckBot
+Disallow:
+Crawl-delay: 10
+
+User-agent: Baiduspider
+Disallow:
+Crawl-delay: 15
+
+User-agent: Yandex
+Disallow:
+Crawl-delay: 10
+
+# --- Block all other bots ---
+
+User-agent: *
+Disallow: /
+
+# --- Block AdBots (no advertising on site) ---
+
+User-agent: AdsBot-Google
+Disallow: /
+
+User-agent: AdsBot-Google-Mobile
+Disallow: /
+
+User-agent: Mediapartners-Google
+Disallow: /
+
+User-agent: Adidxbot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: Exabot
+Disallow: /
+
+Sitemap: https://www.alexhurd.com/sitemap-index.xml
