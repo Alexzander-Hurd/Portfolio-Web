@@ -17,6 +17,7 @@ jobs:
         with:
           submodules: recursive
           ssh-key: ${{ secrets.SSH_PULL_KEY }} # 1. Use content repo key here
+          fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup SSH keys for content and web repos
