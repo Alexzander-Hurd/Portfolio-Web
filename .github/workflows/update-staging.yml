@@ -55,6 +55,10 @@ jobs:
           git submodule sync
           git submodule update --remote src/content
 
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+
           git add src/content
           git commit -m "Update content submodule from upstream" || echo "No changes to commit"
 
