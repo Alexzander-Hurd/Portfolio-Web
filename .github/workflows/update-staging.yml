@@ -60,6 +60,6 @@ jobs:
 
       - name: Push changes to staging branch of web repo
         run: |
-          git remote set-url origin git@web.github.com:Alexzander-Hurd/web-repo.git
+          git remote set-url origin git@web.github.com:Alexzander-Hurd/Portfolio-Web.git
 
           git push origin HEAD:staging
