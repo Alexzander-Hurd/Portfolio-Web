@@ -34,4 +34,4 @@ jobs:
           git submodule update --remote src/content
           git add src/content
           git commit -m "Update content submodule from upstream" || echo "No changes to commit"
-          git push origin staging
+          git push origin HEAD:staging
