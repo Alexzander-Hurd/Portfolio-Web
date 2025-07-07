@@ -206,6 +206,18 @@ hr {
 	box-shadow: 0 0 32px 12px rgba(120, 120, 255, 0.8);
 }
 
+.link-button:hover {
+	/* subtle blue-purple shade */
+	box-shadow: 0 0 24px 8px rgba(100, 100, 255, 0.6);
+	outline: none;
+	/* remove default focus outline */
+}
+
+.link-button:active {
+	/* a bit darker and stronger */
+	box-shadow: 0 0 32px 12px rgba(120, 120, 255, 0.8);
+}
+
 .bg-grad {
   background: linear-gradient(to top right, #064c8b, #a03ad1);
 
