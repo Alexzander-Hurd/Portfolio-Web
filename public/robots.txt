@@ -1,16 +1,23 @@
 # robots.txt for https://www.alexhurd.uk
 
-# --- Allow major SEO bots with conservative crawl rate ---
+# --- Allow major search engines for indexing and sitemap crawling ---
 
 User-agent: Googlebot
 Disallow:
-# Googlebot does not support Crawl-delay in robots.txt
+
+User-agent: Googlebot-News
+Disallow:
+
+User-agent: Googlebot-Image
+Disallow:
+
+User-agent: Googlebot-Video
+Disallow:
+
+User-agent: Googlebot-Mobile
+Disallow:
 
 User-agent: Bingbot
-Disallow:
-Crawl-delay: 10
-
-User-agent: Slurp
 Disallow:
 Crawl-delay: 10
 
@@ -18,20 +25,24 @@ User-agent: DuckDuckBot
 Disallow:
 Crawl-delay: 10
 
-User-agent: Baiduspider
+# --- Allow social media preview bots for proper link sharing ---
+
+User-agent: facebookexternalhit
 Disallow:
-Crawl-delay: 15
 
-User-agent: Yandex
+User-agent: Twitterbot
 Disallow:
-Crawl-delay: 10
 
-# --- Block all other bots ---
+User-agent: LinkedInBot
+Disallow:
 
-User-agent: *
-Disallow: /
+User-agent: Slackbot
+Disallow:
 
-# --- Block AdBots (no advertising on site) ---
+User-agent: Discordbot
+Disallow:
+
+# --- Block ad-related crawlers (ads are not used on this site) ---
 
 User-agent: AdsBot-Google
 Disallow: /
@@ -45,11 +56,38 @@ Disallow: /
 User-agent: Adidxbot
 Disallow: /
 
+# --- Block spammy or irrelevant bots ---
+
 User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
 Disallow: /
 
 User-agent: Exabot
 Disallow: /
+
+User-agent: Baiduspider
+Disallow: /
+Crawl-delay: 15
+
+User-agent: Yandex
+Disallow: /
+Crawl-delay: 10
+
+User-agent: Slurp
+Disallow: /
+Crawl-delay: 10
+
+# --- Catchall: block all other bots not explicitly allowed ---
+
+User-agent: *
+Disallow: /
+
+# --- Sitemap declarations ---
 
 Sitemap: https://www.alexhurd.com/sitemap-index.xml
 Sitemap: https://www.alexhurd.com/sitemap-0.xml
