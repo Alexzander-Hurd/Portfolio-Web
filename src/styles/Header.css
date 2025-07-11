@@ -24,7 +24,12 @@ nav a {
     padding: 1em 0.5em;
     border-bottom: 4px solid transparent;
     text-decoration: none;
-    color: white;
+    color: whitesmoke;
+}
+
+nav a:hover {
+    border-bottom-color: white;
+    color: rgb(0, 162, 255);
 }
 
 nav a.active {
@@ -32,13 +37,13 @@ nav a.active {
     border-bottom-color: white;
 }
 
-.social-links,
-.social-links a {
+header .social-links,
+header .social-links a {
     display: flex;
 }
 
 @media (max-width: 720px) {
-    .social-links {
+    header .social-links {
         display: none;
     }
 }
