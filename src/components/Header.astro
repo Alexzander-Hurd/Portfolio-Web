@@ -1,6 +1,8 @@
 ---
 import HeaderLink from "./HeaderLink.astro";
 import { SITE_TITLE } from "../consts";
+
+import "../styles/Header.css"
 ---
 
 <header>
@@ -76,43 +78,3 @@ import { SITE_TITLE } from "../consts";
     </div>
   </nav>
 </header>
-<style>
-  header {
-    margin: 0;
-    padding: 0 1em;
-  }
-  h2 {
-    margin: 0;
-    font-size: 1em;
-  }
-
-  h2 a,
-  h2 a.active {
-    text-decoration: none;
-    color: white;
-  }
-  nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  nav a {
-    padding: 1em 0.5em;
-    border-bottom: 4px solid transparent;
-    text-decoration: none;
-    color: white;
-  }
-  nav a.active {
-    text-decoration: none;
-    border-bottom-color: white;
-  }
-  .social-links,
-  .social-links a {
-    display: flex;
-  }
-  @media (max-width: 720px) {
-    .social-links {
-      display: none;
-    }
-  }
-</style>

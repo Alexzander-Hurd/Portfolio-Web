@@ -1,0 +1,20 @@
+  footer {
+      padding: 2em 1em 6em 1em;
+      text-align: center;
+  }
+
+  .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1em;
+      margin-top: 1em;
+  }
+
+  .social-links a {
+      text-decoration: none;
+      color: rgb(var(--gray));
+  }
+
+  .social-links a:hover {
+      color: rgb(var(--gray-light));
+  }
