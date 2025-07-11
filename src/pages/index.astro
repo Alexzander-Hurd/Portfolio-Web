@@ -67,11 +67,10 @@ const projects = (await getCollection("portfolio"))
 						<div class="carousel-indicators">
 							{projects.map((_, i) => (
 								<button
-									style="filter: invert(1);"
 									type="button"
 									data-bs-target="#projectCarousel"
 									data-bs-slide-to={i}
-									class={i === 0 ? "active" : ""}
+									class='carousel-button{i === 0 ? " active" : ""}'
 									aria-label={`Slide ${i + 1}`}
 								/>
 							))}
@@ -113,11 +112,10 @@ const projects = (await getCollection("portfolio"))
 					<div class="carousel-indicators">
 						{blogPosts.map((_, i) => (
 							<button
-								style="filter: invert(1);"
 								type="button"
 								data-bs-target="#blogCarousel"
 								data-bs-slide-to={i}
-								class={i === 0 ? "active" : ""}
+								class='carousel-button{i === 0 ? "active" : ""}'
 								aria-label={`Slide ${i + 1}`}
 							/>
 						))}

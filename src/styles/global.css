@@ -223,6 +223,15 @@ hr {
 
 }
 
+.carousel-button {
+	filter: invert(1);
+}
+
+.custom-btn-spacing {
+  height: 15%;
+  margin: 2px;
+}
+
 li {
 	color: white;
 }

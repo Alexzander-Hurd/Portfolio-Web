@@ -8,7 +8,7 @@ import FormattedDate from "../../components/FormattedDate.astro";
 import { Image } from "astro:assets";
 
 const projects = (await getCollection("portfolio")).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 ---
 
@@ -116,6 +116,7 @@ const projects = (await getCollection("portfolio")).sort(
     </main>
     <Footer />
     <script
+      defer
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
       crossorigin="anonymous"></script>
