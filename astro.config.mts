@@ -14,5 +14,15 @@ export default defineConfig({
       [wikiLinks as RemarkPlugin, { basePath: '/blog/' }],
     ],
   },
+  experimental: {
+    csp: {
+      algorithm: 'SHA-256',
+      directives: [
+        "default-src 'self'",
+        "img-src 'self' data: https:",
+        "font-src 'self'"
+      ]
+    }
+  }
 });
 
