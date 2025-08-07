@@ -91,5 +91,5 @@ User-agent: *
 Disallow: /
 
 # --- Sitemap locations ---
-Sitemap: https://www.alexhurd.com/sitemap-index.xml
-Sitemap: https://www.alexhurd.com/sitemap-0.xml
+Sitemap: https://www.alexhurd.uk/sitemap-index.xml
+Sitemap: https://www.alexhurd.uk/sitemap-0.xml
