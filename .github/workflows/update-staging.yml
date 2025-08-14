@@ -16,6 +16,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: false
+          ref: staging
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -45,6 +46,7 @@ jobs:
 
       - name: Update submodule to latest content
         run: |
+          git pull --rebase origin staging
           git submodule init
           git submodule sync
           git submodule update --remote src/content
