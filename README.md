@@ -100,12 +100,12 @@ This project uses a fully automated CI/CD pipeline that integrates GitHub Action
 
 ```mermaid
 flowchart TD
-  A[Commit to portfolio-blog] --> B[Webhook Trigger]
-  B --> C[portfolio-web workflow updates submodule]
-  C --> D[Cloudflare Pages builds staging]
-  D -->|Tested behind Zero Trust| E[Manual promotion workflow]
-  E --> F[Merge staging -> master]
-  F --> G[Cloudflare Pages builds production]
+  A[Commit to blog repo] --> B[Webhook trigger]
+  B --> C[Update submodule]
+  C --> D[Staging build]
+  D -->|Zero Trust| E[Manual promote]
+  E --> F[Merge to master]
+  F --> G[Production build]
 ```
 
 ### 🔮 Planned Improvements
