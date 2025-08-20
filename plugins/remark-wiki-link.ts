@@ -27,15 +27,13 @@ const wikiLinks: Plugin<[Options?]> = (options = {}) => {
       // We only handle if parent is a paragraph with children
       if (
         typeof index !== 'number' ||
-        !parent ||
-        parent.type !== 'paragraph' ||
+        !parent || parent.type === 'code' || parent.type === 'inlineCode' ||
         !('children' in parent)
       ) {
         return;
       }
-
-      // `parent` is narrowed to Paragraph here
-      const paragraph = parent as Paragraph;
+      // `parent` is cast as any object with children as a node array
+      const paragraph = parent as { children: Node[] };
 
       const value = node.value;
       let match: RegExpExecArray | null;
@@ -67,7 +65,7 @@ const wikiLinks: Plugin<[Options?]> = (options = {}) => {
         newNodes.push({ type: 'text', value: value.slice(lastIndex) });
       }
 
-      if (newNodes.length > 0) {
+      if (newNodes.length > 0 && typeof index === 'number') {
         paragraph.children.splice(index, 1, ...newNodes);
       }
     });

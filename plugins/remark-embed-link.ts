@@ -12,7 +12,7 @@ interface Options {
     exts?: string[];
 }
 
-const embedLinks: Plugin<[Options?]> = (options = {} ) => {
+const embedLinks: Plugin<[Options?]> = (options = {}) => {
     var basePath = options.basePath ?? '/images/';
 
     const exts = options.exts ?? ['jpg', 'jpeg', 'png', 'gif', 'svg'];
@@ -34,18 +34,16 @@ const embedLinks: Plugin<[Options?]> = (options = {} ) => {
             // We only handle if parent is a paragraph with children
             if (
                 typeof index !== 'number' ||
-                !parent ||
-                parent.type !== 'paragraph' ||
+                !parent || 
+                parent.type === 'code' ||
+                parent.type === 'inlineCode'||
                 !('children' in parent)
             ) {
                 return;
             }
 
-            // `parent` is narrowed to Paragraph here
-            const paragraph = parent as Paragraph;
-
-            // `node` is narrowed to Text here
-            const text = node as Text;
+            // `parent` is cast as any object with children as a node array
+            const paragraph = parent as { children: Node[] };
 
             const value = node.value;
             let match: RegExpExecArray | null;
@@ -53,7 +51,7 @@ const embedLinks: Plugin<[Options?]> = (options = {} ) => {
 
             let lastIndex = 0;
 
-            while ((match = embedRegex.exec(value)) !== null){
+            while ((match = embedRegex.exec(value)) !== null) {
                 const start = match.index;
                 const file = match[1];
                 const slug = file.split('.').slice(0, -1).join('.').toLowerCase().replace(/ /g, '-');
@@ -69,14 +67,14 @@ const embedLinks: Plugin<[Options?]> = (options = {} ) => {
                 }
 
                 const sources = exts
-                .filter((ext) => {
-                    console.log(path.join(imageDir, `${src}.${ext}`));
-                    return fs.existsSync(path.join(imageDir, `${src}.${ext}`));
-                })
-                .map((ext) => {
-                    return `<source srcset="${src}.${ext}" type="image/${ext === 'jpg' ? 'jpeg' : ext}">`;
-                })
-                .join('\n');
+                    .filter((ext) => {
+                        console.log(path.join(imageDir, `${src}.${ext}`));
+                        return fs.existsSync(path.join(imageDir, `${src}.${ext}`));
+                    })
+                    .map((ext) => {
+                        return `<source srcset="${src}.${ext}" type="image/${ext === 'jpg' ? 'jpeg' : ext}">`;
+                    })
+                    .join('\n');
 
                 const picture = `
                 <picture>
@@ -100,9 +98,9 @@ const embedLinks: Plugin<[Options?]> = (options = {} ) => {
                 });
             }
 
-            if (newNodes.length > 0) {
-                paragraph.children = newNodes;
-            } 
+            if (newNodes.length > 0 && typeof index === 'number') {
+                paragraph.children.splice(index, 1, ...newNodes);
+            }
         });
     };
 };
