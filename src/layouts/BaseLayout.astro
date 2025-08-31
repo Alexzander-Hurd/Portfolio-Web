@@ -26,6 +26,9 @@ const { title, description, heroImage } = Astro.props;
       <slot />
     </main>
     <Footer />
-    <script is:inline src="/vendor/bootstrap/js/bootstrap.bundle.min.js"/>
+    <script
+      unsafe-inline
+      is:inline
+      src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

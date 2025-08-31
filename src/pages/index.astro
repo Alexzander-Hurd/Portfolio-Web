@@ -7,128 +7,113 @@ import ProjectCard from "../components/ProjectCard.astro";
 import { Image } from "astro:assets";
 
 const blogPosts = (await getCollection("blog"))
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.slice(0, 3);
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
 const projects = (await getCollection("portfolio"))
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.slice(0, 2);
-
-	
-
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 2);
 ---
 
 <Layout
-	title="Welcome to Alex Hurd UK"
-	description="Developer & amateur photographer exploring technology and creativity."
-	image={HeroImage}
+  title="Welcome to Alex Hurd UK"
+  description="Developer & amateur photographer exploring technology and creativity."
+  image={HeroImage}
 >
-	<!-- Hero -->
-	<section class="text-center">
-		<Image
-			width={720}
-			height={420}
-			src={HeroImage}
-			alt="Hero Image"
-			class="mx-auto"
-		/>
-		<h2 class="text-4xl md:text-6xl font-bold">Hi, I'm Alex 👋</h2>
-		<p class="text-xl mt-4 text-gray-500">
-			Developer & amateur photographer exploring technology and
-			creativity.
-		</p>
-		<div class="mt-6 flex justify-center gap-4">
-			<a href="/portfolio" class="btn btn-primary">View Portfolio</a>
-			<a href="/blog" class="btn btn-secondary">Read the Blog</a>
-		</div>
-	</section>
+  <!-- Hero -->
+  <section class="text-center">
+    <Image
+      width={720}
+      height={420}
+      src={HeroImage}
+      alt="Hero Image"
+      class="mx-auto"
+    />
+    <h2 class="text-4xl md:text-6xl font-bold">Hi, I'm Alex 👋</h2>
+    <p class="text-xl mt-4 text-gray-500">
+      Developer & amateur photographer exploring technology and creativity.
+    </p>
+    <div class="mt-6 flex justify-center gap-4">
+      <a href="/portfolio" class="btn btn-primary">View Portfolio</a>
+      <a href="/blog" class="btn btn-secondary">Read the Blog</a>
+    </div>
+  </section>
 
-	<!-- Projects -->
-	<section>
-		<h3 class="mt-4">Featured Projects</h3>
-		<div class="grid gap-6 md:grid-cols-2">
-			{
-				projects.length > 0 ? (
-					<div
-						id="projectCarousel"
-						class="carousel slide"
-						data-bs-ride="carousel"
-						data-bs-interval="5000"
-					>
-						<div class="carousel-inner p-5">
-							{projects.map((project, i) => (
-								<div
-									class={`carousel-item ${i === 0 ? "active" : ""}`}
-								>
-									<ProjectCard project={project} />
-								</div>
-							))}
-						</div>
+  <!-- Projects -->
+  <section>
+    <h3 class="mt-4">Featured Projects</h3>
+    <div class="grid gap-6 md:grid-cols-2">
+      {
+        projects.length > 0 ? (
+          <div
+            id="projectCarousel"
+            class="carousel slide"
+            data-bs-ride="carousel"
+            data-bs-interval="5000"
+          >
+            <div class="carousel-inner p-5">
+              {projects.map((project, i) => (
+                <div class={`carousel-item ${i === 0 ? "active" : ""}`}>
+                  <ProjectCard project={project} />
+                </div>
+              ))}
+            </div>
 
-						<div class="carousel-indicators">
-							{projects.map((_, i) => (
-								<button
-									type="button"
-									data-bs-target="#projectCarousel"
-									data-bs-slide-to={i}
-									class='carousel-button{i === 0 ? " active" : ""}'
-									aria-label={`Slide ${i + 1}`}
-								/>
-							))}
-						</div>
-					</div>
-				) : (
-					<p>No blog posts found.</p>
-				)
-			}
-		</div>
-		<div class="mt-4 d-flex justify-content-center">
-			<a href="/portfolio" class="btn btn-primary link-button"
-				>See all projects →</a
-			>
-		</div>
+            <div class="carousel-indicators">
+              {projects.map((_, i) => (
+                <button
+                  type="button"
+                  data-bs-target="#projectCarousel"
+                  data-bs-slide-to={i}
+                  class={`carousel-button ${i === 0 ? "active" : ""}`}
+                  aria-label={`Slide ${i + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <p>No blog posts found.</p>
+        )
+      }
+    </div>
+    <div class="mt-4 d-flex justify-content-center">
+      <a href="/portfolio" class="btn btn-primary link-button"
+        >See all projects →</a
+      >
+    </div>
+  </section>
 
-	</section>
+  <!-- Blog Posts -->
+  <section>
+    <h3 class="mt-4">Latest Blog Posts</h3>
+    {
+      blogPosts.length > 0 ? (
+        <div id="blogCarousel" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner p-5">
+            {blogPosts.map((post, i) => (
+              <div class={`carousel-item ${i === 0 ? "active" : ""}`}>
+                <BlogCard entry={post} />
+              </div>
+            ))}
+          </div>
 
-	<!-- Blog Posts -->
-	<section>
-		<h3 class="mt-4">Latest Blog Posts</h3>
-		{
-			blogPosts.length > 0 ? (
-				<div
-					id="blogCarousel"
-					class="carousel slide"
-					data-bs-ride="carousel"
-				>
-					<div class="carousel-inner p-5">
-						{blogPosts.map((post, i) => (
-							<div
-								class={`carousel-item ${i === 0 ? "active" : ""}`}
-							>
-								<BlogCard entry={post} />
-							</div>
-						))}
-					</div>
-
-					<div class="carousel-indicators">
-						{blogPosts.map((_, i) => (
-							<button
-								type="button"
-								data-bs-target="#blogCarousel"
-								data-bs-slide-to={i}
-								class='carousel-button{i === 0 ? "active" : ""}'
-								aria-label={`Slide ${i + 1}`}
-							/>
-						))}
-					</div>
-				</div>
-			) : (
-				<p>No blog posts found.</p>
-			)
-		}
-		<div class="mt-4 d-flex justify-content-center">
-			<a href="/blog" class="btn btn-primary link-button"
-				>See all posts →</a
-			>
-		</div>
-	</section>
+          <div class="carousel-indicators">
+            {blogPosts.map((_, i) => (
+              <button
+                type="button"
+                data-bs-target="#blogCarousel"
+                data-bs-slide-to={i}
+                class={`carousel-button ${i === 0 ? "active" : ""}`}
+                aria-label={`Slide ${i + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <p>No blog posts found.</p>
+      )
+    }
+    <div class="mt-4 d-flex justify-content-center">
+      <a href="/blog" class="btn btn-primary link-button">See all posts →</a>
+    </div>
+  </section>
 </Layout>
