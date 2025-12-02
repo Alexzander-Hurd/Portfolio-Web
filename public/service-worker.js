@@ -113,11 +113,8 @@ async function networkFirst(req) {
 async function cacheFirst(req) {
   const cache = await caches.open(CACHE_NAME);
 
-  console.log("External resource cache");
-
   const cached = await cache.match(req);
   if (cached) {
-    console.log("External icon retrieved from cache");
     return cached;
   }
 
@@ -129,7 +126,6 @@ async function cacheFirst(req) {
     if (networkResponse.ok || networkResponse.type === "opaque") {
       try {
         cache.put(req, networkResponse.clone());
-        console.log("Cached external icon");
       } catch (err) {
         console.warn("Cache put failed (cacheFirst)", err);
       }
@@ -152,20 +148,55 @@ async function cacheFirst(req) {
 async function externalIconCache(req) {
   const cache = await caches.open("external-icons-v1");
 
-  const cached = await cache.match(req);
+  // Create a canonical cache key (ignore query parameters)
+  const url = new URL(req.url);
+  const cacheKey = `${url.origin}${url.pathname}`;
+
+  // Try cache first
+  const cached = await cache.match(cacheKey);
   if (cached) return cached;
 
   try {
+    // Try network
     const response = await fetch(req);
+
     if (response && response.ok) {
-      cache.put(req, response.clone());
+      // Store under canonical key
+      await cache.put(cacheKey, response.clone());
+      return response;
     }
-    return response;
+
+    console.warn("[SW] external icon returned non-ok:", req.url);
   } catch (err) {
-    // Offline or network failure → tiny transparent SVG
-    return new Response(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"/>`,
-      { headers: { "Content-Type": "image/svg+xml" } },
-    );
+    console.warn("[SW] external icon network fail:", req.url, err);
   }
+
+  // ---------- FALLBACK ----------
+  // Create a meaningful fallback icon using the badge label
+  const text = extractBadgeLabel(url);
+
+  const fallbackSVG = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="120" height="30">
+      <rect width="120" height="30" fill="#555"/>
+      <text x="60" y="20"
+        font-size="12"
+        fill="white"
+        font-family="Arial, sans-serif"
+        text-anchor="middle">
+        ${text}
+      </text>
+    </svg>
+  `.trim();
+
+  return new Response(fallbackSVG, {
+    headers: { "Content-Type": "image/svg+xml" },
+  });
+}
+
+// Extract meaningful label from shields.io URL
+function extractBadgeLabel(url) {
+  // Example: `/badge/-LinkedIn-black.svg`
+  const match = url.pathname.match(/badge\/-(.+?)-/);
+  if (match) return match[1];
+  return "LINK";
 }
