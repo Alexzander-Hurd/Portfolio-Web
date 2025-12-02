@@ -1,6 +1,5 @@
-const cache_name = "alexhurd-site-v1";
-
-const precache_urls = [
+const CACHE_NAME = "alexhurd-site-v1";
+const PRECACHE_URLS = [
   "/",
   "/links",
   "/about",
@@ -9,15 +8,21 @@ const precache_urls = [
   "/favicon.svg",
 ];
 
+// External badge/icon hosts to cache
+const EXTERNAL_ICON_HOSTS = [
+  "https://img.shields.io",
+  "https://custom-icon-badges.demolab.com",
+];
+
+// Install: cache precached URLs
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(cache_name).then((cache) => {
-      return cache.addAll(precache_urls);
-    }),
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS)),
   );
   self.skipWaiting();
 });
 
+// Activate: delete old caches
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
@@ -25,7 +30,7 @@ self.addEventListener("activate", (event) => {
       .then((keys) =>
         Promise.all(
           keys
-            .filter((key) => key !== cache_name)
+            .filter((key) => key !== CACHE_NAME)
             .map((key) => caches.delete(key)),
         ),
       ),
@@ -33,31 +38,42 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+// Fetch event
 self.addEventListener("fetch", (event) => {
   const req = event.request;
 
-  if (req.method !== "GET") {
-    return;
-  }
+  if (req.method !== "GET") return;
 
-  // Navigation requests (HTML)
+  const url = new URL(req.url);
+
+  // 1. HTML navigations → network-first
   if (req.mode === "navigate") {
     event.respondWith(networkFirst(req));
     return;
   }
 
-  // Everything else -> cache-first
-  event.respondWith(cacheFirst(req));
+  // 2. External static badge/icon images → cache-first with offline fallback
+  if (EXTERNAL_ICON_HOSTS.includes(url.origin)) {
+    event.respondWith(externalIconCache(req));
+    return;
+  }
+
+  // 3. Same-origin static assets → cache-first
+  if (url.origin === self.location.origin) {
+    event.respondWith(cacheFirst(req));
+    return;
+  }
+
+  // 4. All other requests → let browser handle normally
 });
 
+// NETWORK-FIRST for navigations
 async function networkFirst(req) {
-  const cache = await caches.open(cache_name);
+  const cache = await caches.open(CACHE_NAME);
 
   try {
     const networkResponse = await fetch(req);
 
-    // If the response is valid, put a clone in the cache.
-    // Accept networkResponse.ok (2xx) OR opaque (type === 'opaque') responses.
     if (
       networkResponse &&
       (networkResponse.ok || networkResponse.type === "opaque")
@@ -65,58 +81,69 @@ async function networkFirst(req) {
       try {
         cache.put(req, networkResponse.clone());
       } catch (err) {
-        // put can fail for opaque or other reasons in some browsers — ignore
         console.warn("Cache put failed (networkFirst)", err);
       }
     }
 
     return networkResponse;
   } catch (err) {
-    // Network failed — return cached navigation or offline.html
     const cached = await caches.match(req);
     if (cached) return cached;
     return caches.match("/offline.html");
   }
 }
 
+// CACHE-FIRST for same-origin assets
 async function cacheFirst(req) {
-  const cache = await caches.open(cache_name);
+  const cache = await caches.open(CACHE_NAME);
 
-  // Try cache
-  const cached = await caches.match(req);
+  const cached = await cache.match(req);
   if (cached) return cached;
 
-  // Not in cache — attempt network fetch
   try {
     const networkResponse = await fetch(req);
-
-    // Don't cache if response is 404/500
     if (!networkResponse) return networkResponse;
     if (networkResponse.status >= 400) return networkResponse;
 
-    // Cache successful responses. We allow caching of "opaque" responses,
-    // but be aware of CORS implications for caching cross-origin resources.
     if (networkResponse.ok || networkResponse.type === "opaque") {
       try {
         cache.put(req, networkResponse.clone());
       } catch (err) {
-        // best-effort caching; swallow errors
         console.warn("Cache put failed (cacheFirst)", err);
       }
     }
 
     return networkResponse;
   } catch (err) {
-    // Network failed: return cached if present, otherwise a minimal fallback
     const fallback = await caches.match(req);
     if (fallback) return fallback;
 
-    // For requests like images, scripts, fonts — return a simple 504 response
-    // (don't return offline.html which breaks types).
     return new Response("Network error", {
       status: 504,
       statusText: "Network error",
       headers: { "Content-Type": "text/plain" },
     });
+  }
+}
+
+// CACHE-FIRST for external badge icons with offline fallback
+async function externalIconCache(req) {
+  const cache = await caches.open("external-icons-v1");
+
+  const cached = await cache.match(req);
+  if (cached) return cached;
+
+  try {
+    const response = await fetch(req);
+    if (response && response.ok) {
+      cache.put(req, response.clone());
+    }
+    return response;
+  } catch (err) {
+    // Offline or network failure → tiny transparent SVG
+    return new Response(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"/>`,
+      { headers: { "Content-Type": "image/svg+xml" } },
+    );
   }
 }
