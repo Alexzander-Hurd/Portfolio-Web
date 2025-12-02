@@ -5,7 +5,6 @@ const PRECACHE_URLS = [
   "/about/",
   "/images/logo.avif",
   "/offline/",
-  "/favicon.svg",
 ];
 
 // External badge/icon hosts to cache
@@ -16,9 +15,7 @@ const EXTERNAL_ICON_HOSTS = [
 
 // Install: cache precached URLs
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS)),
-  );
+  event.waitUntil(precacher(PRECACHE_URLS));
   self.skipWaiting();
 });
 
@@ -66,6 +63,25 @@ self.addEventListener("fetch", (event) => {
 
   // 4. All other requests → let browser handle normally
 });
+
+async function precacher(urls) {
+  const cache = await caches.open(CACHE_NAME);
+
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, { redirect: "follow" });
+
+      if (res.ok || res.type === "opaque") {
+        await cache.put(url, res.clone());
+        console.log("[SW] precached:", url);
+      } else {
+        console.warn("[SW] skipped (non-OK):", url, res.status);
+      }
+    } catch (err) {
+      console.warn("[SW] precache failed:", url, err);
+    }
+  }
+}
 
 // NETWORK-FIRST for navigations
 async function networkFirst(req) {
