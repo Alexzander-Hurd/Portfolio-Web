@@ -29,16 +29,7 @@ const { title, description, image = FallbackImage } = Astro.props;
   href={new URL("rss.xml", Astro.site)}
 />
 <link rel="manifest" href="manifest.json"/>
-<script
-  unsafe-inline
-  is:inline
-  >
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("/service-worker.js");
-    });
-  }
-</script>
+<script href="/sw-register.js"/>
 <meta name="generator" content={Astro.generator} />
 
 <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css"/>
