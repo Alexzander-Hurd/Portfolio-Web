@@ -28,7 +28,7 @@ const { title, description, image = FallbackImage } = Astro.props;
   title={SITE_TITLE}
   href={new URL("rss.xml", Astro.site)}
 />
-<link rel="manifest" href="manifest.json"/>
+<link rel="manifest" href="/manifest.json"/>
 <script is:inline src="/sw-register.js"/>
 <meta name="generator" content={Astro.generator} />
 
