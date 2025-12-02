@@ -4,7 +4,7 @@ const PRECACHE_URLS = [
   "/links",
   "/about",
   "/images/logo.avif",
-  "/offline.html",
+  "/offline",
   "/favicon.svg",
 ];
 
