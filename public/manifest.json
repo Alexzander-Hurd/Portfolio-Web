@@ -1,0 +1,48 @@
+{
+  "version": "25.12.2",
+  "name": "Alex Hurd Portfolio",
+  "short_name": "alexhurd.uk",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "natural",
+  "scope": "/",
+  "shortcuts": [
+    {
+      "name": "Portfolio",
+      "description": "View my Portfolio",
+      "url": "/portfolio"
+    },
+    {
+      "name": "Blog",
+      "description": "View my Blog",
+      "url": "/blog"
+    },
+    {
+      "name": "Links",
+      "description": "See my links",
+      "url": "/links"
+    },
+    {
+      "name": "About",
+      "description": "Learn about me",
+      "url": "/about"
+    }
+  ]
+}
