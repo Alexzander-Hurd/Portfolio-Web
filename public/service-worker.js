@@ -113,8 +113,13 @@ async function networkFirst(req) {
 async function cacheFirst(req) {
   const cache = await caches.open(CACHE_NAME);
 
+  console.log("External resource cache");
+
   const cached = await cache.match(req);
-  if (cached) return cached;
+  if (cached) {
+    console.log("External icon retrieved from cache");
+    return cached;
+  }
 
   try {
     const networkResponse = await fetch(req);
@@ -124,6 +129,7 @@ async function cacheFirst(req) {
     if (networkResponse.ok || networkResponse.type === "opaque") {
       try {
         cache.put(req, networkResponse.clone());
+        console.log("Cached external icon");
       } catch (err) {
         console.warn("Cache put failed (cacheFirst)", err);
       }
