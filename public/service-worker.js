@@ -1,10 +1,10 @@
 const CACHE_NAME = "alexhurd-site-v1";
 const PRECACHE_URLS = [
   "/",
-  "/links",
-  "/about",
+  "/links/",
+  "/about/",
   "/images/logo.avif",
-  "/offline",
+  "/offline/",
   "/favicon.svg",
 ];
 
@@ -89,7 +89,7 @@ async function networkFirst(req) {
   } catch (err) {
     const cached = await caches.match(req);
     if (cached) return cached;
-    return caches.match("/offline");
+    return caches.match("/offline/");
   }
 }
 
