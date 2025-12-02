@@ -89,7 +89,7 @@ async function networkFirst(req) {
   } catch (err) {
     const cached = await caches.match(req);
     if (cached) return cached;
-    return caches.match("/offline.html");
+    return caches.match("/offline");
   }
 }
 
