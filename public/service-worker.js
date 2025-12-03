@@ -155,33 +155,40 @@ async function externalIconCache(req) {
   // Try cache first
   const cached = await cache.match(cacheKey);
   if (cached) return cached;
-
+  
+  //Network fetch
   try {
-    // Try network
-    const response = await fetch(req, {
+    const corsResponse = await fetch(req.url, {
       mode: "cors",
       credentials: "omit",
     });
 
-    if (response && response.ok) {
-      // Store under canonical key
-      await cache.put(cacheKey, response.clone());
-      return response;
+    if (corsResponse.ok) {
+      await cache.put(cacheKey, corsResponse.clone());
+      return corsResponse;
     }
 
-    const opaqueResponse = await fetch(req, {
+    // Not OK but no throw → continue to fallback
+    console.warn("[SW] External icon CORS response not OK:", corsResponse.status);
+  } catch (err) {
+    // CORS throws BEFORE returning a Response
+    console.warn("[SW] External icon CORS fetch threw:", req.url, err);
+  }
+
+  // 3. Try no-cors fallback to get an opaque response
+  try {
+    const opaqueResponse = await fetch(req.url, {
       mode: "no-cors",
       credentials: "omit",
     });
 
+    // no-cors always returns opaque unless network completely fails
     if (opaqueResponse && opaqueResponse.type === "opaque") {
       await cache.put(cacheKey, opaqueResponse.clone());
       return opaqueResponse;
     }
-
-    console.warn("[SW] external icon returned non-ok:", req.url);
   } catch (err) {
-    console.warn("[SW] external icon network fail:", req.url, err);
+    console.warn("[SW] External icon NO-CORS fetch threw:", req.url, err);
   }
 
   // ---------- FALLBACK ----------
