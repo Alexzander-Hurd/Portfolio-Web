@@ -158,7 +158,10 @@ async function externalIconCache(req) {
 
   try {
     // Try network
-    const response = await fetch(req, {mode:'cors'});
+    const response = await fetch(req, {
+      mode: "cors",
+      credentials: "omit",
+    });
 
     if (response && response.ok) {
       // Store under canonical key
@@ -166,10 +169,12 @@ async function externalIconCache(req) {
       return response;
     }
 
-    const opaqueResponse = await fetch(req, {mode:'no-cors'});
+    const opaqueResponse = await fetch(req, {
+      mode: "no-cors",
+      credentials: "omit",
+    });
 
-    if (opaqueResponse && opaqueResponse.type === "opaque")
-    {
+    if (opaqueResponse && opaqueResponse.type === "opaque") {
       await cache.put(cacheKey, opaqueResponse.clone());
       return opaqueResponse;
     }
