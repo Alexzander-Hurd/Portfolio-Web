@@ -155,7 +155,7 @@ async function externalIconCache(req) {
   // Try cache first
   const cached = await cache.match(cacheKey);
   if (cached) return cached;
-  
+
   //Network fetch
   try {
     const corsResponse = await fetch(req.url, {
@@ -169,7 +169,10 @@ async function externalIconCache(req) {
     }
 
     // Not OK but no throw → continue to fallback
-    console.warn("[SW] External icon CORS response not OK:", corsResponse.status);
+    console.warn(
+      "[SW] External icon CORS response not OK:",
+      corsResponse.status,
+    );
   } catch (err) {
     // CORS throws BEFORE returning a Response
     console.warn("[SW] External icon CORS fetch threw:", req.url, err);
@@ -216,7 +219,9 @@ async function externalIconCache(req) {
 // Extract meaningful label from shields.io URL
 function extractBadgeLabel(url) {
   // Example: `/badge/-LinkedIn-black.svg`
-  const match = url.pathname.match(/badge\/-(.+?)-/);
-  if (match) return match[1];
+  const match = url.pathname.match(/badge\/-?(.+?)-/);
+  if (match) return decodeURIComponent(match[1]);
+  match = url.pathname.match(/logo=(.+?)&/);
+  if (match) return decodeURIComponent(match[1]);
   return "LINK";
 }
