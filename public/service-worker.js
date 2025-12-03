@@ -158,12 +158,20 @@ async function externalIconCache(req) {
 
   try {
     // Try network
-    const response = await fetch(req);
+    const response = await fetch(req, {mode:'cors'});
 
     if (response && response.ok) {
       // Store under canonical key
       await cache.put(cacheKey, response.clone());
       return response;
+    }
+
+    const opaqueResponse = await fetch(req, {mode:'no-cors'});
+
+    if (opaqueResponse && opaqueResponse.type === "opaque")
+    {
+      await cache.put(cacheKey, opaqueResponse.clone());
+      return opaqueResponse;
     }
 
     console.warn("[SW] external icon returned non-ok:", req.url);
